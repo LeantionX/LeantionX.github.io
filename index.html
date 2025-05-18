@@ -128,6 +128,28 @@
             font-weight: bold;
         }
 
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%; 
+            display: block;
+        }
+
+        .fallback-initials {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+            display: none; /* по умолчанию скрыто */
+            align-items: center;
+            justify-content: center;
+        }
+
         h1 {
             font-size: 32px;
             margin-bottom: 10px;
@@ -436,7 +458,10 @@
 
     <div class="container">
         <section id="about" class="hero">
-            <div class="hero-image">АЛ</div>
+            <div class="hero-image">
+                <img src="photo.jpg" alt="АЛ" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                <div class="fallback-initials">АЛ</div>
+            </div>
             <div class="hero-content">
                 <h1>Леонтьев Антон Леонидович</h1>
                 <h3>Руководитель группы разработчиков</h3>
