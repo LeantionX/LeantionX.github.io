@@ -67,9 +67,20 @@
         }
 
         .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
             font-size: 24px;
             font-weight: 700;
             color: var(--primary-color);
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%; 
+            display: block;
         }
 
         .menu {
@@ -426,7 +437,9 @@
     <header>
         <div class="container">
             <nav>
-                <div class="logo">АЛ</div>
+                <div class="logo">
+                    <img src="logo.png" alt="АЛ" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                </div>
                 <ul class="menu">
                     <li><a href="#about" class="active">Обо мне</a></li>
                     <li><a href="#experience">Опыт работы</a></li>
@@ -783,7 +796,7 @@
                     testimonials: 'Testimonials',
                     contact: 'Contact',
                     downloadResume: 'Download PDF Resume',
-                    name: 'Anton Leontiev',
+                    name: 'Antony Leontev',
                     position: 'Development Team Lead',
                     aboutText: 'Experienced development team leader with over 9 years in IT. Strong technical skills (C++, Python, Qt) and team management experience. Specializing in creating high-load systems and optimizing development processes.',
                     passionText: 'Passionate about creating efficient and scalable solutions, constantly improving professional skills.',
@@ -791,7 +804,7 @@
                     achievementsText: 'Key Achievements',
                     languagesText: 'Languages',
                     degree: 'Degree: Master',
-                    footerText: '© 2025 Anton Leontiev. Resume updated April 26, 2025.',
+                    footerText: '© 2025 Antony Leontev. Resume updated April 26, 2025.',
                     examplesTitle: 'Project Examples',
                     testimonialsTitle: 'Testimonials',
                     phone: 'Phone',
