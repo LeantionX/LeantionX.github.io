@@ -881,66 +881,79 @@
             
             // Download resume button
             document.getElementById('download-resume').addEventListener('click', function() {
+                console.log('Кнопка "Скачать резюме" нажата');
             const lang = currentLang;
-            const fileName = lang === 'ru' ? 'Резюме.pdf' : 'Resume.pdf';
+            const fileName = 'Resume.pdf';
             
-            // Более надежный способ скачивания с отладочными сообщениями
             try {
                 console.log('Начинаем загрузку файла: ' + fileName);
                 
-                // Проверим метод 1: через Blob и URL.createObjectURL
-                // Этот метод лучше работает при локальном запуске
-                const createAndDownloadFile = function(filename, text) {
-                    console.log('Создаем фиктивный PDF для тестирования скачивания');
-                    const blob = new Blob(
-                        ['Это тестовый PDF-файл для демонстрации скачивания. Замените на реальный PDF.'], 
-                        { type: 'application/pdf' }
-                    );
+                // Создаем демо-PDF для скачивания
+                const createAndDownloadPdf = function(filename) {
+                    // Создаем PDF с базовой информацией (для демонстрации)
+                    // В реальном приложении здесь должен быть путь к вашему PDF-файлу
+                    const pdfContent = '%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj 2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj 3 0 obj<</Type/Page/MediaBox[0 0 595 842]/Parent 2 0 R/Resources<<>>/Contents 4 0 R>>endobj 4 0 obj<</Length 67>>stream\nBT\n/F1 12 Tf\n100 742 Td\n(' + (lang === 'ru' ? 'Резюме Леонтьева Антона' : 'Resume of Anton Leontiev') + ') Tj\nET\nendstream\nendobj\nxref\n0 5\n0000000000 65535 f\n0000000009 00000 n\n0000000056 00000 n\n0000000111 00000 n\n0000000212 00000 n\ntrailer<</Size 5/Root 1 0 R>>\nstartxref\n326\n%%EOF';
+                    
+                    const blob = new Blob([pdfContent], { type: 'application/pdf' });
                     const url = URL.createObjectURL(blob);
                     
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.download = filename;
-                    document.body.appendChild(link);
-                    
-                    console.log('Запускаем скачивание через программный клик');
-                    link.click();
-                    
-                    // Очистка
-                    setTimeout(() => {
-                        document.body.removeChild(link);
-                        URL.revokeObjectURL(url);
-                        console.log('Скачивание должно было начаться');
-                    }, 100);
+                    if (tg && tg.openLink) {
+                        // Если мы в Telegram WebApp и есть метод openLink
+                        console.log('Открываем ссылку через Telegram WebApp');
+                        tg.openLink(url);
+                    } else {
+                        // Стандартный метод скачивания через браузер
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = filename;
+                        link.target = '_blank';
+                        document.body.appendChild(link);
+                        
+                        console.log('Запускаем скачивание через программный клик');
+                        link.click();
+                        
+                        // Очистка
+                        setTimeout(() => {
+                            document.body.removeChild(link);
+                            URL.revokeObjectURL(url);
+                            console.log('Скачивание должно было начаться');
+                        }, 100);
+                    }
                 };
                 
-                // Для демонстрации в Telegram WebApp
+                // Обработка в зависимости от контекста: Telegram WebApp или обычный браузер
                 if (tg && tg.showPopup) {
-                    console.log('Обнаружено Telegram WebApp API, показываем диалог');
+                    // Подход с диалогом для Telegram WebApp
                     tg.showPopup({
-                        title: 'Скачивание резюме',
-                        message: 'Начинаем загрузку файла ' + fileName,
+                        title: lang === 'ru' ? 'Скачивание резюме' : 'Download Resume',
+                        message: lang === 'ru' 
+                                ? 'Начать загрузку файла ' + fileName + '?' 
+                                : 'Start downloading ' + fileName + '?',
                         buttons: [{ 
                             type: 'ok',
-                            id: 'download-ok'
+                            id: 'download-ok',
+                            text: lang === 'ru' ? 'Скачать' : 'Download'
+                        }, {
+                            type: 'cancel',
+                            id: 'download-cancel'
                         }]
                     }, function(buttonId) {
                         if (buttonId === 'download-ok') {
-                            console.log('Нажата кнопка OK в диалоге Telegram');
-                            createAndDownloadFile(fileName);
+                            console.log('Подтверждено скачивание');
+                            createAndDownloadPdf(fileName);
                         }
                     });
                 } else {
+                    // Прямое скачивание в обычном браузере
                     console.log('Обычный браузер, запускаем скачивание');
-                    createAndDownloadFile(fileName);
+                    createAndDownloadPdf(fileName);
                 }
-                
-                // Показываем уведомление пользователю в любом случае
-                alert('Начинаем скачивание файла ' + fileName + '. Если скачивание не началось, проверьте консоль браузера (F12)');
                 
             } catch (error) {
                 console.error('Ошибка при попытке скачать файл:', error);
-                alert('Произошла ошибка при попытке скачать файл: ' + error.message);
+                alert(lang === 'ru' 
+                    ? 'Произошла ошибка при скачивании: ' + error.message 
+                    : 'Error while downloading: ' + error.message);
             }
         });
             
@@ -964,3 +977,5 @@
                 });
             });
         });
+    </script>
+</body>
