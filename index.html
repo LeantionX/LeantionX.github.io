@@ -897,7 +897,7 @@
                     const blob = new Blob([pdfContent], { type: 'application/pdf' });
                     const url = URL.createObjectURL(blob);
                     
-                    if (tg && tg.openLink) {
+                    if (isTelegramWebApp && tg.openLink) {
                         // Если мы в Telegram WebApp и есть метод openLink
                         console.log('Открываем ссылку через Telegram WebApp');
                         tg.openLink(url);
@@ -922,7 +922,8 @@
                 };
                 
                 // Обработка в зависимости от контекста: Telegram WebApp или обычный браузер
-                if (tg && tg.showPopup) {
+                const isTelegramWebApp = !!tg?.initDataUnsafe?.user;
+                if (isTelegramWebApp && tg.showPopup) {
                     // Подход с диалогом для Telegram WebApp
                     tg.showPopup({
                         title: lang === 'ru' ? 'Скачивание резюме' : 'Download Resume',
