@@ -881,16 +881,39 @@
             
             // Download resume button
             document.getElementById('download-resume').addEventListener('click', function() {
-                // In a real implementation, this would download the PDF
-                // For this demo, we'll just show an alert or use Telegram's showPopup if available
+                const lang = currentLang;
+                const fileName = 'Resume.pdf';//lang === 'ru' ? 'Резюме.pdf' : 'Resume.pdf';
+                
+                // Если PDF файл существует в том же каталоге
+                // или на сервере, можно использовать простую ссылку
+                const downloadPdf = function(filename) {
+                    // Создаем ссылку для скачивания
+                    const link = document.createElement('a');
+                    link.href = filename; // путь к PDF-файлу
+                    link.download = filename;
+                    link.style.display = 'none';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                };
+                
+                // Для демонстрации в Telegram WebApp
                 if (tg && tg.showPopup) {
                     tg.showPopup({
-                        title: 'PDF Resume',
-                        message: 'PDF resume would be downloaded in a real implementation.',
-                        buttons: [{ type: 'ok' }]
+                        title: 'Скачивание резюме',
+                        message: 'Начинаем загрузку файла ' + fileName,
+                        buttons: [{ 
+                            type: 'ok',
+                            id: 'download-ok'
+                        }]
+                    }, function(buttonId) {
+                        if (buttonId === 'download-ok') {
+                            downloadPdf(fileName);
+                        }
                     });
                 } else {
-                    alert('PDF resume would be downloaded in a real implementation.');
+                    // Для обычных браузеров
+                    downloadPdf(fileName);
                 }
             });
             
