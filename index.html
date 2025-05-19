@@ -262,7 +262,7 @@
 
         .portfolio-grid {
             display: grid;
-            /*grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));*/
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
         }
 
@@ -277,6 +277,7 @@
             cursor: pointer;
             overflow: hidden;
             position: relative;
+            padding: 0 20px;
         }
 
         .portfolio-item:hover {
@@ -657,12 +658,12 @@
 
         <section id="portfolio">
             <h2>Примеры проектов</h2>
-            <div class="card">
+            <div class="portfolio-item">
+                <h4>Раздел под апдейтом — код ревью с котиками в процессе</h4>
+            </div>
+            <!--<div class="card">
                 <div class="portfolio-grid">
                     <div class="portfolio-item">
-                        <h4>Раздел под апдейтом — код ревью с котиками в процессе</h4>
-                    </div>
-                    <!--<div class="portfolio-item">
                         <h4>Оптимизация процессов тестирования</h4>
                     </div>
                     <div class="portfolio-item">
@@ -673,9 +674,9 @@
                     </div>
                     <div class="portfolio-item">
                         <h4>Система нематериальной мотивации</h4>
-                    </div>-->
+                    </div>
                 </div>
-            </div>
+            </div>-->
         </section>
 
         <section id="testimonials">
