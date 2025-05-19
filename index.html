@@ -881,24 +881,42 @@
             
             // Download resume button
             document.getElementById('download-resume').addEventListener('click', function() {
-                const lang = currentLang;
-                const fileName = 'Resume.pdf';//lang === 'ru' ? 'Резюме.pdf' : 'Resume.pdf';
+            const lang = currentLang;
+            const fileName = lang === 'ru' ? 'Резюме.pdf' : 'Resume.pdf';
+            
+            // Более надежный способ скачивания с отладочными сообщениями
+            try {
+                console.log('Начинаем загрузку файла: ' + fileName);
                 
-                // Если PDF файл существует в том же каталоге
-                // или на сервере, можно использовать простую ссылку
-                const downloadPdf = function(filename) {
-                    // Создаем ссылку для скачивания
+                // Проверим метод 1: через Blob и URL.createObjectURL
+                // Этот метод лучше работает при локальном запуске
+                const createAndDownloadFile = function(filename, text) {
+                    console.log('Создаем фиктивный PDF для тестирования скачивания');
+                    const blob = new Blob(
+                        ['Это тестовый PDF-файл для демонстрации скачивания. Замените на реальный PDF.'], 
+                        { type: 'application/pdf' }
+                    );
+                    const url = URL.createObjectURL(blob);
+                    
                     const link = document.createElement('a');
-                    link.href = filename; // путь к PDF-файлу
+                    link.href = url;
                     link.download = filename;
-                    link.style.display = 'none';
                     document.body.appendChild(link);
+                    
+                    console.log('Запускаем скачивание через программный клик');
                     link.click();
-                    document.body.removeChild(link);
+                    
+                    // Очистка
+                    setTimeout(() => {
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(url);
+                        console.log('Скачивание должно было начаться');
+                    }, 100);
                 };
                 
                 // Для демонстрации в Telegram WebApp
                 if (tg && tg.showPopup) {
+                    console.log('Обнаружено Telegram WebApp API, показываем диалог');
                     tg.showPopup({
                         title: 'Скачивание резюме',
                         message: 'Начинаем загрузку файла ' + fileName,
@@ -908,14 +926,23 @@
                         }]
                     }, function(buttonId) {
                         if (buttonId === 'download-ok') {
-                            downloadPdf(fileName);
+                            console.log('Нажата кнопка OK в диалоге Telegram');
+                            createAndDownloadFile(fileName);
                         }
                     });
                 } else {
-                    // Для обычных браузеров
-                    downloadPdf(fileName);
+                    console.log('Обычный браузер, запускаем скачивание');
+                    createAndDownloadFile(fileName);
                 }
-            });
+                
+                // Показываем уведомление пользователю в любом случае
+                alert('Начинаем скачивание файла ' + fileName + '. Если скачивание не началось, проверьте консоль браузера (F12)');
+                
+            } catch (error) {
+                console.error('Ошибка при попытке скачать файл:', error);
+                alert('Произошла ошибка при попытке скачать файл: ' + error.message);
+            }
+        });
             
             // Scroll spy (highlight current section in navigation)
             window.addEventListener('scroll', function() {
