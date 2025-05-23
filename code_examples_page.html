@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Примеры кода | Леонтьев Антон</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --secondary-color: #1e40af;
+            --accent-color: #38bdf8;
+            --background-color: #f8fafc;
+            --text-color: #1e293b;
+            --light-text: #64748b;
+            --card-bg: #ffffff;
+            --border-radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --transition: all 0.3s ease;
+        }
+
+        .dark-theme {
+            --primary-color: #60a5fa;
+            --secondary-color: #3b82f6;
+            --accent-color: #38bdf8;
+            --background-color: #0f172a;
+            --text-color: #e2e8f0;
+            --light-text: #94a3b8;
+            --card-bg: #1e293b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            padding: 20px 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            color: var(--secondary-color);
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .language-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-color);
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            transition: var(--transition);
+        }
+
+        .language-toggle:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        .page-header {
+            padding: 60px 0 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: var(--light-text);
+            margin-bottom: 40px;
+        }
+
+        .tech-filter {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .tech-btn {
+            background: none;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .tech-btn:hover,
+        .tech-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .example-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .example-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .example-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 20px;
+            color: white;
+            position: relative;
+        }
+
+        .example-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="30" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="70" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="80" r="2.5" fill="rgba(255,255,255,0.1)"/></svg>');
+        }
+
+        .example-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .example-tech {
+            font-size: 12px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .example-content {
+            padding: 25px;
+        }
+
+        .example-description {
+            color: var(--light-text);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .example-features {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .example-features li {
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+            font-size: 13px;
+            color: var(--light-text);
+        }
+
+        .example-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .example-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .view-btn {
+            flex: 1;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .view-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .github-btn {
+            background: none;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .github-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .complexity-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+
+        .coming-soon {
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(56, 189, 248, 0.05));
+            border-radius: var(--border-radius);
+            border: 2px dashed var(--primary-color);
+            margin: 40px 0;
+        }
+
+        .coming-soon-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.6;
+        }
+
+        .coming-soon-text {
+            color: var(--light-text);
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .coming-soon-subtext {
+            color: var(--light-text);
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .examples-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tech-filter {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .example-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="back-btn">
+                    ← Назад к резюме
+                </a>
+                <div class="logo">АЛ</div>
+                <div class="controls">
+                    <button class="language-toggle" id="language-toggle">RU</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Примеры кода</h1>
+            <p class="subtitle">Демонстрация навыков и технических решений</p>
+        </div>
+
+        <div class="tech-filter">
+            <button class="tech-btn active" data-tech="all">Все</button>
+            <button class="tech-btn" data-tech="cpp">C++</button>
+            <button class="tech-btn" data-tech="qt">Qt</button>
+            <button class="tech-btn" data-tech="python">Python</button>
+            <button class="tech-btn" data-tech="algorithms">Алгоритмы</button>
+        </div>
+
+        <div class="examples-grid">
+            <div class="example-card" data-tech="cpp">
+                <div class="example-header">
+                    <div class="complexity-badge">Средний</div>
+                    <h3 class="example-title">Многопоточный пул задач</h3>
+                    <div class="example-tech">C++ • STL • Threading</div>
+                </div>
+                <div class="example-content">
+                    <p class="example-description">
+                        Реализация эффективного пула потоков для обработки задач с использованием современного C++17/20.
+                    </p>
+                    <ul class="example-features">
+                        <li>Thread-safe очередь задач</li>
+                        <li>Автоматическое масштабирование</li>
+                        <li>RAII управление ресурсами</li>
+                        <li>Future/Promise для результатов</li>
+                    </ul>
+                    <div class="example-actions">
+                        <a href="#" class="view-btn">Смотреть пример 👁️</a>
+                        <a href="#" class="github-btn">📁</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="example-card" data-tech="qt">
+                <div class="example-header">
+                    <div class="complexity-badge">Продвинутый</div>
+                    <h3 class="example-title">Кастомные Qt виджеты</h3>
+                    <div class="example-tech">Qt • QML • Graphics</div>
+                </div>
+                <div class="example-content">
+                    <p class="example-description">
+                        Набор переиспользуемых виджетов с современным дизайном и плавными анимациями.
+                    </p>
+                    <ul class="example-features">
+                        <li>
+                                                <button class="language-toggle" onclick="toggleLanguage()">RU | EN</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>Примеры кода</h1>
+            <p class="subtitle">Проекты и сниппеты, разработанные Антоном Леонтьевым</p>
+        </div>
+
+        <div class="tech-filter">
+            <button class="tech-btn active">Все</button>
+            <button class="tech-btn">Python</button>
+            <button class="tech-btn">C++</button>
+            <button class="tech-btn">JavaScript</button>
+        </div>
+
+        <div class="examples-grid">
+            <!-- Примеры карточек здесь -->
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-title">Трейдинг-бот на Python</div>
+                    <div class="example-tech">Python</div>
+                    <div class="complexity-badge">Средне</div>
+                </div>
+                <div class="example-content">
+                    <p class="example-description">Бот подключается к API брокера и совершает сделки по техническому анализу.</p>
+                    <ul class="example-features">
+                        <li>API Тинькофф Инвестиций</li>
+                        <li>Индикаторы: RSI, SMA</li>
+                        <li>Логирование в CSV</li>
+                    </ul>
+                    <div class="example-actions">
+                        <a href="https://github.com/..." class="github-btn">GitHub</a>
+                        <a href="project.html" class="view-btn">Детальнее</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Другие карточки примеров... -->
+
+        </div>
+
+        <div class="coming-soon">
+            <div class="coming-soon-icon">🚧</div>
+            <div class="coming-soon-text">Скоро будут добавлены новые примеры!</div>
+            <div class="coming-soon-subtext">Следите за обновлениями.</div>
+        </div>
+    </main>
+
+    <script>
+        function toggleLanguage() {
+            // Пример переключения языка
+            alert('Переключение языка пока не реализовано.');
+        }
+
+        // Telegram WebApp init
+        if (window.Telegram && Telegram.WebApp) {
+            Telegram.WebApp.ready();
+        }
+    </script>
+</body>
+</html>
